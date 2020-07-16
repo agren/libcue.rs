@@ -1,3 +1,4 @@
+use std::ffi::CStr;
 use std::ffi::CString;
 
 use cue_sys as libcue;
@@ -51,12 +52,12 @@ impl Track {
     /// The track might be stored standalone in its own file, or
     /// as part of a large file containing the contents of the entire disc.
     pub fn get_filename(&self) -> String {
-        let c_string;
+        let c_str;
         unsafe {
             let raw_string = libcue::track_get_filename(self.track);
-            c_string = CString::from_raw(raw_string);
+            c_str = CStr::from_ptr(raw_string);
         }
-        return c_string.to_string_lossy().into_owned();
+        return c_str.to_string_lossy().into_owned();
     }
 
     /// Returns the start address of this track in sectors.
